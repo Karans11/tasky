@@ -41,6 +41,13 @@ jobs:
       run: |
         docker tag $ECR_REPO_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:latest
 
+    - name: Vulnerability scan with Grype
+      uses: anchore/scan-action@v6
+      with:
+        image: $ECR_REPO_NAME:latest
+        fail-build: false
+        severity-cutoff: high
+        output-format: table
     - name: Push Docker image to ECR
       run: |
         docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:latest
